@@ -345,6 +345,23 @@ Trade.AcceptTrade.OnClientEvent:Connect(function (arg)
                 end
                 break
             end
+            for i = #PlayersOrder s[Receiver], 1, -1 do
+                local sum = 0
+                for category, things in pairs(Logging["Given"]) do
+                    for thing, _ in pairs(things) do
+                        sum += 1
+                        if sum > 0 then
+                            break
+                        end
+                    end
+                    if sum > 0 then
+                        break
+                    end
+                    if sum == 0 then
+                        PlayersOrders[Receiver][i] = nil
+                    end
+                end
+            end
             Receiver = nil
             Logging = nil
             local args = {
