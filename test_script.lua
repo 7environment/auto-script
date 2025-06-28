@@ -24,6 +24,28 @@ local trade = {}
 local messages = {}
 local timer = 5
 
+local function noSpam(message)
+    local exists = false
+    for _,v in ipairs(messages) do
+        if v == message then
+            exists = true
+        end
+    end
+    if not exists then
+        Channel:SendAsync(message)
+        table.insert(messages, message)
+        spawn(function () 
+            wait(timer)
+            for i,v in ipairs(messages) do
+                if v == message then
+                    table.remove(messages, i)
+                    break
+                end
+            end
+        end)
+    end
+end
+
 local function logTrade(data)
     _G.Tradable = false
     local status
@@ -62,7 +84,7 @@ local function getOrders(username)
         local LocalPlayerInv
         repeat
             LocalPlayerInv = Inventory:WaitForChild("GetProfileData"):InvokeServer()
-            task.wait(0.1)
+            wait(0.1)
         until LocalPlayerInv ~= nil
         for index = #data, 1, -1 do
             local delete = true
