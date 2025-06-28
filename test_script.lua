@@ -46,6 +46,16 @@ local function noSpam(message)
     end
 end
 
+local function addManyThings(thing, count, category)
+    for i = 1, count do
+        local args = {
+            [1] = thing,
+            [2] = category
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("OfferItem"):FireServer(unpack(args))
+    end
+end
+
 local function logTrade(data)
     _G.Tradable = false
     local status
@@ -118,6 +128,64 @@ local function getOrders(username)
             end
         end
         return data
+    end
+end
+
+local function giveThings(username)
+    local slot_counter = 0
+    local LocalPlayerInv
+    Receiver = username
+    repeat
+        LocalPlayerInv = Inventory:WaitForChild("GetProfileData"):InvokeServer()
+        task.wait(0.1)
+    until LocalPlayerInv ~= nil
+    for i = #PlayersOrders[username], 1, -1 do
+        local order = PlayersOrders[username][i]
+        Logging = {
+            ["OrderId"] = order["OrderId"],
+            ["Needed"] = {
+                ["Weapons"] = {},
+                ["Pets"] = {}
+            },
+            ["Given"] = {
+                ["Weapons"] = {},
+                ["Pets"] = {}
+            }
+        }
+        
+        for category, things in pairs(order["Things"]) do 
+            for thing, count in pairs(things) do
+                if LocalPlayerInv[category].Owned[thing] > 0 then
+                    addManyThings(thing, count, category)
+                    slot_counter += 1
+                    Logging["Needed"][category][thing] = count
+                    if count < LocalPlayerInv[category].Owned[thing] then
+                        Logging["Given"][category][thing] = count
+                    else
+                        Logging["Given"][category][thing] = LocalPlayerInv[category].Owned[thing]
+                    end
+                else
+                    Logging["Needed"][category][thing] = count
+                    Logging["Given"][category][thing] = 0
+                end
+                if slot_counter == 4 then
+                    break
+                end
+            end
+            if slot_counter == 4 then
+                break
+            end
+        end
+        if slot_counter > 0 then
+            break
+        else
+            logTrade(Logging)
+            table.remove(PlayersOrders[username], i)
+        end
+    end
+    if slot_counter == 0 then
+        game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("DeclineTrade"):FireServer()
+        noSpam("Извините, для выдачи вашего заказа не хватает предметов")
     end
 end
 
