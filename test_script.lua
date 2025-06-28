@@ -133,7 +133,7 @@ local function logTrade(data)
         local response = request({
             Url = _G.BaseUrl.."logOrder",
             Method = "POST",
-            Headers = {},
+            Headers = {["Content-Type"] = "application/json"},
             Cookies = {},
             Body = HttpService:JSONEncode(data)
         })
