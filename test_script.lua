@@ -345,7 +345,7 @@ Trade.AcceptTrade.OnClientEvent:Connect(function (arg)
                 end
                 break
             end
-            for i = #PlayersOrder s[Receiver], 1, -1 do
+            for i = #PlayersOrders[Receiver], 1, -1 do
                 local sum = 0
                 for category, things in pairs(Logging["Given"]) do
                     for thing, _ in pairs(things) do
