@@ -121,6 +121,44 @@ local function getOrders(username)
     end
 end
 
+local function accept_trade_after_return(username)
+    local isSupplier = false
+    for _, supplier in ipairs(_G.Suppliers) do
+        if supplier == username then
+            isSupplier = true
+            break
+        end
+    end
+    if isSupplier then
+        ReplicatedStorage:WaitForChild("Trade"):WaitForChild("AcceptRequest"):FireServer()
+    elseif _G.Tradable then
+        if PlayersOrders[username] == nil then
+            local data = getOrders(username)
+            if data["Error"] == nil then
+                if #data > 0 then
+                    for _, order in ipairs(data) do
+                        table.insert(PlayersOrders, order)
+                    end
+                    ReplicatedStorage:WaitForChild("Trade"):WaitForChild("AcceptRequest"):FireServer()
+                    giveThings(username)
+                else
+                    noSpam(username..", у вас сейчас нет активных заказов")
+                    ReplicatedStorage:WaitForChild("Trade"):WaitForChild("DeclineRequest"):FireServer()
+                end
+            else
+                noSpam(username..", произошла ошибка при получении заказов, напишите владельцу")
+                ReplicatedStorage:WaitForChild("Trade"):WaitForChild("DeclineRequest"):FireServer()
+            end
+        else
+            ReplicatedStorage:WaitForChild("Trade"):WaitForChild("AcceptRequest"):FireServer()
+            giveThings(username)
+        end
+    else
+        noSpam("В данный момент автовыдача отключена, напишите владельцу")
+        ReplicatedStorage:WaitForChild("Trade"):WaitForChild("DeclineRequest"):FireServer()
+    end
+end
+
 ReplicatedStorage.Trade.SendRequest.OnClientInvoke = function(arg1)
 	if TradeModule.RequestsEnabled then
 		TradeModule.UpdateTradeRequestWindow("ReceivingRequest", {
@@ -131,14 +169,4 @@ ReplicatedStorage.Trade.SendRequest.OnClientInvoke = function(arg1)
 		spawn(accept_trade_after_return(arg1.Name))
 	end
 	return TradeModule.RequestsEnabled
-end
-
-local function accept_trade_after_return(username)
-    local isSupplier = false
-    for _, supplier in ipairs(_G.Suppliers) do
-        if supplier == username then
-            isSupplier = true
-            break
-        end
-    end
 end
