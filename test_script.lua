@@ -127,6 +127,7 @@ local function getOrders(username)
                 logTrade(log)
             end
         end
+        print(HttpService:JSONEncode(data))
         return data
     end
 end
