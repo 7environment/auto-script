@@ -226,7 +226,7 @@ local function giveThings(username)
         for category, things in pairs(order["Things"]) do 
             for thing, count in pairs(things) do
                 print(thing,count,category,LocalPlayerInv[category].Owned[thing],HttpService:JSONEncode(LocalPlayerInv))
-                if LocalPlayerInv[category].Owned[thing] > 0 then
+                if LocalPlayerInv[category].Owned[thing] ~= nil then
                     addManyThings(thing, count, category)
                     slot_counter += 1
                     Logging["Needed"][category][thing] = count
