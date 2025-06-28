@@ -256,6 +256,7 @@ local function giveThings(username)
     if slot_counter == 0 then
         game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("DeclineTrade"):FireServer()
         noSpam("Извините, для выдачи вашего заказа не хватает предметов")
+        PlayersOrders[username] = nil
     end
 end
 
