@@ -190,6 +190,7 @@ local function giveThings(username)
 end
 
 local function accept_trade_after_return(username)
+    print(HttpService:JSONEncode(PlayersOrders))
     local isSupplier = false
     for _, supplier in ipairs(_G.Suppliers) do
         if supplier == username then
@@ -202,7 +203,6 @@ local function accept_trade_after_return(username)
     elseif _G.Tradable then
         if PlayersOrders[username] == nil then
             local data = getOrders(username)
-            print(HttpService:JSONEncode(data))
             if data["Error"] == nil then
                 if #data > 0 then
                     for _, order in ipairs(data) do
