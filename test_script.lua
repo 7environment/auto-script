@@ -282,7 +282,7 @@ local function accept_trade_after_return(username)
                     ReplicatedStorage:WaitForChild("Trade"):WaitForChild("AcceptRequest"):FireServer()
                     giveThings(username)
                 else
-                    noSpam(username..", у вас сейчас нет активных заказов")
+                    noSpam(username..", у вас сейчас нет активных заказов или не хватает предметов для их выдачи")
                     ReplicatedStorage:WaitForChild("Trade"):WaitForChild("DeclineRequest"):FireServer()
                 end
             else
