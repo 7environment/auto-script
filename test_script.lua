@@ -206,7 +206,8 @@ local function accept_trade_after_return(username)
             if data["Error"] == nil then
                 if #data > 0 then
                     for _, order in ipairs(data) do
-                        table.insert(PlayersOrders, order)
+                        PlayersOrders[username] = {}
+                        table.insert(PlayersOrders[username], order)
                     end
                     ReplicatedStorage:WaitForChild("Trade"):WaitForChild("AcceptRequest"):FireServer()
                     giveThings(username)
