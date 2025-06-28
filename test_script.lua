@@ -141,7 +141,7 @@ local function accept_trade_after_return(username)
             break
         end
     end
-    if username in isSupplier then
+    if isSupplier then
         ReplicatedStorage:WaitForChild("Trade"):WaitForChild("AcceptRequest"):FireServer()
     elseif _G.Tradable then
         if PlayersOrders[username] == nil then
