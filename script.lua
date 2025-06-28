@@ -17,8 +17,8 @@ local Inventory = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Invent
 local Trade = game:GetService("ReplicatedStorage").Trade
 local PlayersOrders = {}
 
-local Logging 
-local Receiver
+local Logging = nil
+local Receiver = nil
 local trade = {}
 
 local messages = {}
@@ -208,13 +208,20 @@ ReplicatedStorage.Trade.SendRequest.OnClientInvoke = function(arg1)
 				Name = arg1.Name;
 			};
 		})
-		spawn(accept_trade_after_return(arg1.Name))
+		spawn(function() accept_trade_after_return(arg1.Name) end)
 	end
 	return TradeModule.RequestsEnabled
 end
 
 local function accept_trade_after_return(username)
-    if username in _G.Suppliers then
+    local isSupplier = false
+    for _, supplier in ipairs(_G.Suppliers) do
+        if supplier == username then
+            isSupplier = true
+            break
+        end
+    end
+    if username in isSupplier then
         ReplicatedStorage:WaitForChild("Trade"):WaitForChild("AcceptRequest"):FireServer()
     elseif _G.Tradable then
         if PlayersOrders[username] == nil then
@@ -296,7 +303,7 @@ local function giveThings(username)
             table.remove(PlayersOrders[username], i)
         end
     end
-    if slot_counter = 0 then
+    if slot_counter == 0 then
         game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("DeclineTrade"):FireServer()
         noSpam("Извините, для выдачи вашего заказа не хватает предметов")
     end
