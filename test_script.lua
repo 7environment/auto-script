@@ -311,7 +311,7 @@ ReplicatedStorage.Trade.SendRequest.OnClientInvoke = function(arg1)
 	return TradeModule.RequestsEnabled
 end
 
-Trade.AcceptTrade.OnClientEvent:Connect(spawn(function (arg) 
+Trade.AcceptTrade.OnClientEvent:Connect(function (arg) 
     if arg == false then
         local sum = 0
         local isSupplier = false
@@ -374,8 +374,8 @@ Trade.AcceptTrade.OnClientEvent:Connect(spawn(function (arg)
             Logging = nil
         end
     end
-end))
- 
+end)
+
 Trade.DeclineTrade.OnClientEvent:Connect(function (arg)
     Logging = nil
     Receiver = nil
