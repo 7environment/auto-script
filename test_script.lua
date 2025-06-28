@@ -312,24 +312,24 @@ ReplicatedStorage.Trade.SendRequest.OnClientInvoke = function(arg1)
 end
 
 Trade.AcceptTrade.OnClientEvent:Connect(function (arg) 
-    if arg == false then
-        local sum = 0
-        local isSupplier = false
-        for _, supplier in ipairs(_G.Suppliers) do
-            if supplier == Receiver then
-                isSupplier = true
-                break
-            end
+    local sum = 0
+    local isSupplier = false
+    for _, supplier in ipairs(_G.Suppliers) do
+        if supplier == Receiver then
+            isSupplier = true
+            break
         end
-        for _, v in pairs(trade["Their Offer"]) do
-            for _, _ in pairs(v) do
-                sum += 1
-                break
-            end
-            if sum > 0 then
-                break
-            end
-        end 
+    end
+    for _, v in pairs(trade["Their Offer"]) do
+        for _, _ in pairs(v) do
+            sum += 1
+            break
+        end
+        if sum > 0 then
+            break
+        end
+    end 
+    if arg == false then
         if isSupplier then
             local args = {
                 [1] = 285646582
@@ -345,6 +345,9 @@ Trade.AcceptTrade.OnClientEvent:Connect(function (arg)
                 [1] = 285646582
             }
             game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("AcceptTrade"):FireServer(unpack(args))
+        end
+    else
+        if not isSupplier then
             for i = #PlayersOrders[Receiver], 1, -1 do
                 for category, things in pairs(Logging["Given"]) do
                     for thing, _ in pairs(things) do
