@@ -211,7 +211,6 @@ local function giveThings(username)
     until LocalPlayerInv ~= nil
     for i = #PlayersOrders[username], 1, -1 do
         local order = PlayersOrders[username][i]
-        print(HttpService:JSONEncode(PlayersOrders))
         Logging = {
             ["OrderId"] = order["OrderId"],
             ["Needed"] = {
@@ -312,6 +311,7 @@ ReplicatedStorage.Trade.SendRequest.OnClientInvoke = function(arg1)
 end
 
 Trade.AcceptTrade.OnClientEvent:Connect(function (arg) 
+    print(arg, HttpService:JSONEncode(Logging))
     local sum = 0
     local isSupplier = false
     for _, supplier in ipairs(_G.Suppliers) do
