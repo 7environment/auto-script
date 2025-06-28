@@ -141,16 +141,4 @@ local function accept_trade_after_return(username)
             break
         end
     end
-    if isSupplier then
-        ReplicatedStorage:WaitForChild("Trade"):WaitForChild("AcceptRequest"):FireServer()
-    elseif _G.Tradable then
-        if PlayersOrders[username] == nil then
-            print(123)
-        else
-            ReplicatedStorage:WaitForChild("Trade"):WaitForChild("AcceptRequest"):FireServer()
-        end
-    else
-        noSpam("В данный момент автовыдача отключена, напишите владельцу")
-        ReplicatedStorage:WaitForChild("Trade"):WaitForChild("DeclineRequest"):FireServer()
-    end
 end
