@@ -128,6 +128,7 @@ ReplicatedStorage.Trade.SendRequest.OnClientInvoke = function(arg1)
 				Name = arg1.Name;
 			};
 		})
+        print(arg1.Name)
 		spawn(function() accept_trade_after_return(arg1.Name) end)
 	end
 	return TradeModule.RequestsEnabled
