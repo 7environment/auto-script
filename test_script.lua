@@ -311,7 +311,7 @@ ReplicatedStorage.Trade.SendRequest.OnClientInvoke = function(arg1)
 	return TradeModule.RequestsEnabled
 end
 
-Trade.AcceptTrade.OnClientEvent:Connect(function (arg) 
+Trade.AcceptTrade.OnClientEvent:Connect(spawn(function (arg) 
     if arg == false then
         local sum = 0
         local isSupplier = false
@@ -324,10 +324,14 @@ Trade.AcceptTrade.OnClientEvent:Connect(function (arg)
         for _, v in pairs(trade["Their Offer"]) do
             for _, _ in pairs(v) do
                 sum += 1
+                break
+            end
+            if sum > 0 then
+                break
             end
         end
         if isSupplier then
-            local args = {
+            local args = { 
                 [1] = 285646582
             }
             game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("AcceptTrade"):FireServer(unpack(args))
@@ -336,6 +340,10 @@ Trade.AcceptTrade.OnClientEvent:Connect(function (arg)
         elseif sum > 0 then
             noSpam("Пожалуйста уберите из трейда предметы")
         else
+            local args = {
+                [1] = 285646582
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("AcceptTrade"):FireServer(unpack(args))
             logTrade(Logging)
             for i = #PlayersOrders[Receiver], 1, -1 do
                 for category, things in pairs(Logging["Given"]) do
@@ -364,15 +372,11 @@ Trade.AcceptTrade.OnClientEvent:Connect(function (arg)
             end
             Receiver = nil
             Logging = nil
-            local args = {
-                [1] = 285646582
-            }
-            game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("AcceptTrade"):FireServer(unpack(args))
         end
     end
-end)
+end))
 
-Trade.DeclineTrade.OnClientEvent:Connect(function (arg)
+Trade.DeclineTrade.OnClientEvent:Connect(spawn(function (arg)
     Logging = nil
     Receiver = nil
-end)
+end))
