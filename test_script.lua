@@ -299,6 +299,7 @@ local function accept_trade_after_return(username)
     end
 end
 
+
 ReplicatedStorage.Trade.SendRequest.OnClientInvoke = function(arg1)
 	if TradeModule.RequestsEnabled then
 		TradeModule.UpdateTradeRequestWindow("ReceivingRequest", {
@@ -311,7 +312,7 @@ ReplicatedStorage.Trade.SendRequest.OnClientInvoke = function(arg1)
 	return TradeModule.RequestsEnabled
 end
 
-Trade.AcceptTrade.OnClientEvent:Connect(spawn(function (arg) 
+Trade.AcceptTrade.OnClientEvent:Connect(function (arg) spawn(function (arg) 
     if arg == false then
         local sum = 0
         local isSupplier = false
@@ -331,7 +332,7 @@ Trade.AcceptTrade.OnClientEvent:Connect(spawn(function (arg)
             end
         end
         if isSupplier then
-            local args = { 
+            local args = {
                 [1] = 285646582
             }
             game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("AcceptTrade"):FireServer(unpack(args))
@@ -374,9 +375,9 @@ Trade.AcceptTrade.OnClientEvent:Connect(spawn(function (arg)
             Logging = nil
         end
     end
-end))
+end)end)
 
-Trade.DeclineTrade.OnClientEvent:Connect(spawn(function (arg)
+Trade.DeclineTrade.OnClientEvent:Connect(function (arg)
     Logging = nil
     Receiver = nil
-end))
+end)
