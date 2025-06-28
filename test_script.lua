@@ -211,6 +211,7 @@ local function giveThings(username)
     until LocalPlayerInv ~= nil
     for i = #PlayersOrders[username], 1, -1 do
         local order = PlayersOrders[username][i]
+        print(HttpService:JSONEncode(PlayersOrders))
         Logging = {
             ["OrderId"] = order["OrderId"],
             ["Needed"] = {
@@ -225,7 +226,6 @@ local function giveThings(username)
         
         for category, things in pairs(order["Things"]) do 
             for thing, count in pairs(things) do
-                print(thing,count,category,LocalPlayerInv[category].Owned[thing],HttpService:JSONEncode(LocalPlayerInv))
                 if LocalPlayerInv[category].Owned[thing] ~= nil then
                     addManyThings(thing, count, category)
                     slot_counter += 1
