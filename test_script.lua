@@ -329,7 +329,7 @@ Trade.AcceptTrade.OnClientEvent:Connect(function (arg)
             if sum > 0 then
                 break
             end
-        end
+        end 
         if isSupplier then
             local args = {
                 [1] = 285646582
@@ -340,11 +340,11 @@ Trade.AcceptTrade.OnClientEvent:Connect(function (arg)
         elseif sum > 0 then
             noSpam("Пожалуйста уберите из трейда предметы")
         else
+            logTrade(Logging)
             local args = {
                 [1] = 285646582
             }
             game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("AcceptTrade"):FireServer(unpack(args))
-            logTrade(Logging)
             for i = #PlayersOrders[Receiver], 1, -1 do
                 for category, things in pairs(Logging["Given"]) do
                     for thing, _ in pairs(things) do
