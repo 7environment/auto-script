@@ -127,7 +127,6 @@ local function getOrders(username)
                 logTrade(log)
             end
         end
-        print(HttpService:JSONEncode(data))
         return data
     end
 end
@@ -203,6 +202,7 @@ local function accept_trade_after_return(username)
     elseif _G.Tradable then
         if PlayersOrders[username] == nil then
             local data = getOrders(username)
+            print(HttpService:JSONEncode(data))
             if data["Error"] == nil then
                 if #data > 0 then
                     for _, order in ipairs(data) do
