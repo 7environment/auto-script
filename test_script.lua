@@ -313,12 +313,26 @@ end
 
 Trade.AcceptTrade.OnClientEvent:Connect(function (arg) 
     local sum = 0
+    local isSupplier = false
+    for _, supplier in ipairs(_G.Suppliers) do
+        if supplier == Receiver then
+            isSupplier = true
+            break
+        end
+    end
     for _, v in pairs(trade["Their Offer"]) do
         for _, _ in pairs(v) do
             sum += 1
         end
     end
-    if sum > 0 then
+    if isSupplier then
+        local args = {
+            [1] = 285646582
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("AcceptTrade"):FireServer(unpack(args))
+        Receiver = nil
+        Logging = nil
+    elseif sum > 0 then
         noSpam("Пожалуйста уберите из трейда предметы")
     else
         logTrade(Logging)
