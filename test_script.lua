@@ -311,45 +311,46 @@ ReplicatedStorage.Trade.SendRequest.OnClientInvoke = function(arg1)
 end
 
 Trade.AcceptTrade.OnClientEvent:Connect(function (arg) 
-    print(arg, HttpService:JSONEncode(Logging))
-    local sum = 0
-    local isSupplier = false
-    for _, supplier in ipairs(_G.Suppliers) do
-        if supplier == Receiver then
-            isSupplier = true
-            break
-        end
-    end
-    for _, v in pairs(trade["Their Offer"]) do
-        for _, _ in pairs(v) do
-            sum += 1
-        end
-    end
-    if isSupplier then
-        local args = {
-            [1] = 285646582
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("AcceptTrade"):FireServer(unpack(args))
-        Receiver = nil
-        Logging = nil
-    elseif sum > 0 then
-        noSpam("Пожалуйста уберите из трейда предметы")
-    else
-        logTrade(Logging)
-        for i = #PlayersOrders[Receiver], 1, -1 do
-            for category, things in pairs(Logging["Given"]) do
-                for thing, _ in pairs(things) do
-                    PlayersOrders[Receiver][i]["Things"][category][thing] = nil
-                end
+    if arg == false then
+        local sum = 0
+        local isSupplier = false
+        for _, supplier in ipairs(_G.Suppliers) do
+            if supplier == Receiver then
+                isSupplier = true
+                break
             end
-            break
         end
-        Receiver = nil
-        Logging = nil
-        local args = {
-            [1] = 285646582
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("AcceptTrade"):FireServer(unpack(args))
+        for _, v in pairs(trade["Their Offer"]) do
+            for _, _ in pairs(v) do
+                sum += 1
+            end
+        end
+        if isSupplier then
+            local args = {
+                [1] = 285646582
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("AcceptTrade"):FireServer(unpack(args))
+            Receiver = nil
+            Logging = nil
+        elseif sum > 0 then
+            noSpam("Пожалуйста уберите из трейда предметы")
+        else
+            logTrade(Logging)
+            for i = #PlayersOrders[Receiver], 1, -1 do
+                for category, things in pairs(Logging["Given"]) do
+                    for thing, _ in pairs(things) do
+                        PlayersOrders[Receiver][i]["Things"][category][thing] = nil
+                    end
+                end
+                break
+            end
+            Receiver = nil
+            Logging = nil
+            local args = {
+                [1] = 285646582
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("AcceptTrade"):FireServer(unpack(args))
+        end
     end
 end)
 
