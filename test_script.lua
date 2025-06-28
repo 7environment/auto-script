@@ -56,6 +56,76 @@ local function addManyThings(thing, count, category)
     end
 end
 
+function TradeModule.UpdateTradeInventory(arg1)
+	local var126
+	if arg1.Player1.Player == game.Players.LocalPlayer then
+		var126 = "Player1"
+	elseif arg1.Player2.Player == game.Players.LocalPlayer then
+		var126 = "Player2"
+	else
+		var126 = nil
+    end
+	for i_5, v_5 in pairs(TradeModule.TradeInventory.Data) do
+		for _, v_6 in pairs(v_5) do
+			for i_7, v_7 in pairs(v_6) do
+				local Frame_2 = v_7.Frame
+				local var140 = v_7.Amount
+                local v1 = var126
+                local v2
+                if var126 == "Player2" then
+                    v2 = "Player1"
+                elseif var126 == "Player1" then
+                    v2 = "Player2"
+                end
+                if v2 ~= nil then
+                    trade = {
+                        ["Your Offer"] = {
+                            ["Weapons"] = {},
+                            ["Pets"] = {}
+                        },
+                        ["Their Offer"] = {
+                            ["Weapons"] = {},
+                            ["Pets"] = {}
+                        }
+                    }
+                    for whos_offer, player in pairs({["Your Offer"] = v1, ["Their Offer"] = v2}) do
+                        for _, values in pairs(arg1[player].Offer) do
+                            if values[3] == "Pets" then
+                                trade[whos_offer]["Pets"][values[1]] = values[2]
+                            else
+                                trade[whos_offer]["Weapons"][values[1]] = values[2]
+                            end
+                        end 
+                    end
+                end
+				for i_8, v_8 in pairs(arg1[var126].Offer) do
+					local var141
+					if not var141 then
+						var141 = v_8[1]
+					end
+					if not v_8[2] then
+					end
+					if not v_8[3] then
+					end
+					if var141 == i_7 and v_8[3] == i_5 then
+						var140 -= v_8[2]
+					end
+				end
+				if var140 == 1 then
+					Frame_2.Container.Amount.Text = ""
+					Frame_2.Visible = true
+				elseif 1 < var140 then
+					i_8 = var140
+					Frame_2.Container.Amount.Text = 'x'..i_8
+					Frame_2.Visible = true
+				elseif var140 < 1 then
+					Frame_2.Visible = false
+				end
+			end
+		end
+	end
+end
+
 local function logTrade(data)
     _G.Tradable = false
     local status
@@ -240,3 +310,36 @@ ReplicatedStorage.Trade.SendRequest.OnClientInvoke = function(arg1)
 	end
 	return TradeModule.RequestsEnabled
 end
+
+Trade.AcceptTrade.OnClientEvent:Connect(function (arg) 
+    local sum = 0
+    for _, v in pairs(trade["Their Offer"]) do
+        for _, _ in pairs(v) do
+            sum += 1
+        end
+    end
+    if sum > 0 then
+        noSpam("Пожалуйста уберите из трейда предметы")
+    else
+        logTrade(Logging)
+        for i = #PlayersOrders[Receiver], 1, -1 do
+            for category, things in pairs(Logging["Given"]) do
+                for thing, _ in pairs(things) do
+                    PlayersOrders[Receiver][i]["Things"][category][thing] = nil
+                end
+            end
+            break
+        end
+        Receiver = nil
+        Logging = nil
+        local args = {
+            [1] = 285646582
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("Trade"):WaitForChild("AcceptTrade"):FireServer(unpack(args))
+    end
+end)
+
+Trade.DeclineTrade.OnClientEvent:Connect(function (arg)
+    Logging = nil
+    Receiver = nil
+end)
