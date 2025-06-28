@@ -156,6 +156,7 @@ local function giveThings(username)
         for category, things in pairs(order["Things"]) do 
             for thing, count in pairs(things) do
                 if LocalPlayerInv[category].Owned[thing] > 0 then
+                    print(thing,count,category)
                     addManyThings(thing, count, category)
                     slot_counter += 1
                     Logging["Needed"][category][thing] = count
@@ -190,7 +191,6 @@ local function giveThings(username)
 end
 
 local function accept_trade_after_return(username)
-    print(HttpService:JSONEncode(PlayersOrders))
     local isSupplier = false
     for _, supplier in ipairs(_G.Suppliers) do
         if supplier == username then
